@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>心理困局自测诊断</title>
+<style>
+  /* ===== Design Tokens ===== */
+  :root {
+    --bg: #FFF8F0;
+    --card-bg: #FFFFFF;
+    --text: #4A3A2F;
+    --text-light: #8C7B6E;
+    --text-muted: #B5A89A;
+    --accent: #8BAF9A;
+    --accent-dark: #6B8F7A;
+    --accent-light: #D4E8DC;
+    --warm: #E8B4A0;
+    --warm-dark: #D4947A;
+    --warm-light: #F5E0D6;
+    --border: #E8DED4;
+    --shadow-sm: 0 1px 4px rgba(74,58,47,0.06);
+    --shadow: 0 2px 16px rgba(74,58,47,0.08);
+    --shadow-lg: 0 4px 24px rgba(74,58,47,0.12);
+    --radius-sm: 10px;
+    --radius: 16px;
+    --radius-lg: 24px;
+    --font-serif: Georgia, 'Times New Roman', 'Noto Serif SC', serif;
+    --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 16px; scroll-behavior: smooth; }
+  body {
+    font-family: var(--font-sans);
+    background-color: var(--bg);
+    background-image:
+      radial-gradient(ellipse 300px 200px at 5% 10%, rgba(139,175,154,0.10) 0%, transparent 100%),
+      radial-gradient(ellipse 250px 250px at 92% 15%, rgba(232,180,160,0.12) 0%, transparent 100%),
+      radial-gradient(ellipse 200px 300px at 10% 88%, rgba(232,180,160,0.10) 0%, transparent 100%),
+      radial-gradient(ellipse 280px 220px at 85% 80%, rgba(139,175,154,0.11) 0%, transparent 100%);
+    background-attachment: fixed;
+    color: var(--text);
+    line-height: 1.7;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  /* ===== Background Decorations ===== */
+  #bg-decorations {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+  .bg-deco {
+    position: absolute;
+    font-size: 1.6rem;
+    opacity: 0;
+    animation: floatUp 12s ease-in-out infinite;
+    filter: blur(0px);
+    user-select: none;
+  }
+  @keyframes floatUp {
+    0%   { opacity: 0; transform: translateY(0) rotate(0deg) scale(0.6); }
+    10%  { opacity: 0.45; }
+    85%  { opacity: 0.35; }
+    100% { opacity: 0; transform: translateY(-60px) rotate(15deg) scale(0.8); }
+  }
+
+  /* ===== Layout ===== */
+  .container {
+    position: relative;
+    z-index: 1;
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 24px 20px 60px;
+  }
+
+  /* ===== Card ===== */
+  .card {
+    background: var(--card-bg);
+    border-radius: var(--radius-lg);
+    padding: 36px 28px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+  }
+
+  /* ===== Typography ===== */
+  h1 {
+    font-family: var(--font-serif);
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.4;
+    margin-bottom: 12px;
+  }
+  h2 {
+    font-family: var(--font-serif);
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.4;
+    margin-bottom: 8px;
+  }
+  h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--accent-dark);
+    margin-bottom: 10px;
+  }
+  p { margin-bottom: 12px; color: var(--text); }
+  .text-light { color: var(--text-light); }
+  .text-muted { color: var(--text-muted); font-size: 0.9rem; }
+
+  /* ===== Buttons ===== */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px 32px;
+    border: none;
+    border-radius: var(--radius);
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition);
+    min-height: 48px;
+    text-decoration: none;
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(139,175,154,0.35);
+  }
+  .btn-primary:hover {
+    background: var(--accent-dark);
+    box-shadow: 0 4px 16px rgba(139,175,154,0.45);
+    transform: translateY(-1px);
+  }
+  .btn-outline {
+    background: transparent;
+    color: var(--accent-dark);
+    border: 2px solid var(--accent);
+  }
+  .btn-outline:hover { background: var(--accent-light); }
+  .btn-warm {
+    background: var(--warm);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(232,180,160,0.35);
+  }
+  .btn-warm:hover { background: var(--warm-dark); }
+  .btn-sm { padding: 10px 20px; font-size: 0.9rem; min-height: 40px; }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+  /* ===== Version Select ===== */
+  .version-cards {
+    display: flex;
+    gap: 14px;
+    margin: 20px 0;
+  }
+  .version-card {
+    flex: 1;
+    padding: 22px 16px;
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
+    text-align: center;
+    cursor: pointer;
+    transition: all var(--transition);
+    background: var(--card-bg);
+  }
+  .version-card:hover {
+    border-color: var(--accent);
+    background: var(--accent-light);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow);
+  }
+  .version-card.selected {
+    border-color: var(--accent);
+    background: var(--accent-light);
+    box-shadow: 0 0 0 3px rgba(139,175,154,0.15);
+  }
+  .version-card .vc-icon { font-size: 2rem; margin-bottom: 8px; }
+  .version-card .vc-title { font-weight: 700; font-size: 1rem; color: var(--text); margin-bottom: 4px; }
+  .version-card .vc-desc { font-size: 0.82rem; color: var(--text-light); }
+  .version-card .vc-badge {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 10px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    margin-top: 6px;
+  }
+  .vc-badge.fast { background: var(--accent-light); color: var(--accent-dark); }
+  .vc-badge.full { background: var(--warm-light); color: var(--warm-dark); }
+
+  /* ===== Progress Bar ===== */
+  .progress-wrap { margin-bottom: 24px; }
+  .progress-info { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.85rem; color: var(--text-light); }
+  .progress-bar { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
+  .progress-fill { height: 100%; background: var(--accent); border-radius: 3px; transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+
+  /* ===== Options ===== */
+  .options-list { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
+  .option-btn {
+    display: flex; align-items: center; gap: 12px;
+    width: 100%; padding: 16px 20px;
+    background: var(--card-bg);
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
+    font-family: var(--font-sans); font-size: 0.95rem; color: var(--text);
+    cursor: pointer; transition: all var(--transition);
+    text-align: left; line-height: 1.5;
+  }
+  .option-btn:hover { border-color: var(--accent); background: var(--accent-light); }
+  .option-btn.selected { border-color: var(--accent); background: var(--accent-light); box-shadow: 0 0 0 3px rgba(139,175,154,0.15); }
+  .option-label {
+    flex-shrink: 0; width: 28px; height: 28px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 50%; background: var(--warm-light); color: var(--warm-dark);
+    font-weight: 700; font-size: 0.8rem;
+  }
+  .option-btn.selected .option-label { background: var(--accent); color: #fff; }
+
+  /* ===== Navigation ===== */
+  .nav-buttons { display: flex; justify-content: space-between; margin-top: 24px; gap: 12px; }
+  .nav-buttons .btn { flex: 1; }
+
+  /* ===== Version Tag on Quiz ===== */
+  .version-tag {
+    display: inline-block;
+    padding: 3px 12px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-bottom: 16px;
+  }
+  .version-tag.fast { background: var(--accent-light); color: var(--accent-dark); }
+  .version-tag.full { background: var(--warm-light); color: var(--warm-dark); }
+
+  /* ===== Welcome Page ===== */
+  .welcome-icon { font-size: 4rem; text-align: center; margin-bottom: 16px; line-height: 1; }
+  .welcome-subtitle { font-family: var(--font-serif); font-size: 1.1rem; color: var(--text-light); margin-bottom: 20px; }
+  .feature-list { list-style: none; margin: 20px 0 24px; display: flex; flex-direction: column; gap: 12px; }
+  .feature-list li { display: flex; align-items: flex-start; gap: 12px; font-size: 0.95rem; color: var(--text); }
+  .feature-icon {
+    flex-shrink: 0; width: 32px; height: 32px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 50%; background: var(--accent-light); color: var(--accent-dark); font-size: 1rem;
+  }
+  .disclaimer {
+    margin-top: 20px; padding: 14px 18px;
+    background: var(--warm-light); border-radius: var(--radius-sm);
+    font-size: 0.85rem; color: var(--text-light); line-height: 1.6;
+  }
+  .start-btn-area { text-align: center; margin-top: 8px; }
+
+  /* ===== Results Page ===== */
+  .result-header { text-align: center; margin-bottom: 28px; }
+  .result-badge {
+    display: inline-block; padding: 6px 18px;
+    background: var(--warm-light); color: var(--warm-dark);
+    border-radius: 20px; font-size: 0.85rem; font-weight: 600; margin-bottom: 16px;
+  }
+  .result-name { font-family: var(--font-serif); font-size: 2rem; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+  .result-summary { font-size: 1.05rem; color: var(--text-light); max-width: 480px; margin: 0 auto; }
+  .section { margin-bottom: 28px; }
+  .section-title {
+    display: flex; align-items: center; gap: 8px;
+    font-family: var(--font-serif); font-size: 1.15rem; font-weight: 700;
+    color: var(--text); margin-bottom: 12px; padding-bottom: 8px;
+    border-bottom: 2px solid var(--accent-light);
+  }
+  .bullet-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .bullet-list li { display: flex; align-items: flex-start; gap: 10px; font-size: 0.95rem; color: var(--text); line-height: 1.5; }
+  .bullet-dot { flex-shrink: 0; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); margin-top: 8px; }
+  .action-card {
+    background: var(--accent-light); border-radius: var(--radius);
+    padding: 18px 20px; margin-bottom: 10px; border-left: 4px solid var(--accent);
+  }
+  .action-card .action-num { font-family: var(--font-serif); font-size: 0.85rem; font-weight: 700; color: var(--accent-dark); margin-bottom: 4px; }
+  .action-card p { margin: 0; font-size: 0.95rem; }
+  .score-bar-group { display: flex; flex-direction: column; gap: 8px; }
+  .score-row { display: flex; align-items: center; gap: 10px; font-size: 0.85rem; }
+  .score-label { width: 100px; text-align: right; flex-shrink: 0; color: var(--text-light); }
+  .score-track { flex: 1; height: 10px; background: var(--border); border-radius: 5px; overflow: hidden; }
+  .score-fill { height: 100%; background: var(--accent); border-radius: 5px; transition: width 1s cubic-bezier(0.4, 0, 0.2, 1); }
+  .score-fill.primary { background: var(--warm); }
+  .score-val { width: 30px; font-weight: 700; color: var(--text); }
+
+  /* ===== Celebration (礼花) ===== */
+  #fireworks-layer {
+    position: fixed; inset: 0; z-index: 100; pointer-events: none;
+  }
+  .firework-particle {
+    position: absolute;
+    width: 10px; height: 10px;
+    border-radius: 3px;
+    animation: fireworkBurst 2.5s ease-out forwards;
+  }
+  @keyframes fireworkBurst {
+    0%   { opacity: 1; transform: translate(0, 0) scale(1) rotate(0deg); }
+    20%  { opacity: 1; }
+    100% { opacity: 0; transform: translate(var(--fx), var(--fy)) scale(0) rotate(var(--fr)); }
+  }
+  .firework-text {
+    position: fixed;
+    top: 38%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 101;
+    font-family: var(--font-serif);
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--text);
+    text-align: center;
+    animation: celebrateText 2.5s ease-out forwards;
+    pointer-events: none;
+    text-shadow: 0 0 30px rgba(232,180,160,0.6);
+  }
+  @keyframes celebrateText {
+    0%   { opacity: 0; transform: translate(-50%, -50%) scale(0.3); }
+    15%  { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
+    25%  { transform: translate(-50%, -50%) scale(1); }
+    80%  { opacity: 1; }
+    100% { opacity: 0; }
+  }
+
+  /* ===== Relax Modal ===== */
+  #relax-modal {
+    position: fixed; inset: 0; z-index: 200;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(74,58,47,0.4);
+    backdrop-filter: blur(4px);
+  }
+  #relax-modal.hidden { display: none; }
+  .relax-card {
+    background: var(--card-bg);
+    border-radius: var(--radius-lg);
+    padding: 40px 32px;
+    max-width: 420px;
+    width: 90%;
+    text-align: center;
+    box-shadow: var(--shadow-lg);
+    animation: modalIn 0.4s ease;
+  }
+  @keyframes modalIn {
+    from { opacity: 0; transform: scale(0.9) translateY(20px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+  }
+  .relax-icon { font-size: 3rem; margin-bottom: 12px; }
+  .relax-title { font-family: var(--font-serif); font-size: 1.4rem; font-weight: 700; margin-bottom: 8px; }
+  .relax-subtitle { font-size: 0.95rem; color: var(--text-light); margin-bottom: 24px; }
+  .breath-circle {
+    width: 100px; height: 100px;
+    margin: 0 auto 20px;
+    border-radius: 50%;
+    background: var(--accent-light);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2rem;
+    animation: breathe 4s ease-in-out infinite;
+  }
+  @keyframes breathe {
+    0%, 100% { transform: scale(1); opacity: 0.6; }
+    50%      { transform: scale(1.5); opacity: 1; }
+  }
+  .relax-timer {
+    font-family: var(--font-serif);
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--accent-dark);
+    margin-bottom: 16px;
+  }
+  .relax-guide { font-size: 0.9rem; color: var(--text-light); margin-bottom: 20px; }
+  .relax-skip {
+    background: none; border: none;
+    color: var(--text-muted); font-size: 0.85rem;
+    cursor: pointer; text-decoration: underline;
+  }
+
+  /* ===== Animations ===== */
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .fade-in { animation: fadeInUp 0.5s ease forwards; }
+  .delay-1 { animation-delay: 0.1s; opacity: 0; }
+  .delay-2 { animation-delay: 0.2s; opacity: 0; }
+  .delay-3 { animation-delay: 0.3s; opacity: 0; }
+
+  .hidden { display: none !important; }
+
+  /* ===== Responsive ===== */
+  @media (max-width: 480px) {
+    .container { padding: 16px 12px 48px; }
+    .card { padding: 24px 18px; border-radius: var(--radius); }
+    h1 { font-size: 1.5rem; }
+    h2 { font-size: 1.2rem; }
+    .result-name { font-size: 1.6rem; }
+    .option-btn { padding: 14px 16px; font-size: 0.9rem; }
+    .btn { padding: 12px 24px; font-size: 0.95rem; }
+    .score-label { width: 70px; font-size: 0.75rem; }
+    .version-cards { flex-direction: column; }
+    .firework-text { font-size: 1.8rem; }
+  }
+  @media (min-width: 768px) {
+    .container { padding: 40px 20px 80px; }
+    .card { padding: 48px 40px; }
+    h1 { font-size: 2rem; }
+  }
+  @media print {
+    body { background: #fff; }
+    .card { box-shadow: none; border: none; }
+    .btn, .nav-buttons, .progress-wrap, #bg-decorations, #fireworks-layer { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== Background Decorations ===== -->
+<div id="bg-decorations"></div>
+
+<!-- ===== Fireworks Layer ===== -->
+<div id="fireworks-layer" class="hidden"></div>
+
+<!-- ===== Relax Modal ===== -->
+<div id="relax-modal" class="hidden">
+  <div class="relax-card">
+    <div class="relax-icon">🧘</div>
+    <div class="relax-title">先放松一下</div>
+    <div class="relax-subtitle">做完题辛苦了！深呼吸几次，再看报告吧</div>
+    <div class="breath-circle" id="breath-circle">🌿</div>
+    <div class="relax-timer" id="relax-seconds">10</div>
+    <div class="relax-guide" id="relax-guide">吸气…</div>
+    <button class="relax-skip" onclick="skipRelax()">跳过，直接看结果 →</button>
+  </div>
+</div>
+
+<!-- ===== Main App ===== -->
+<div class="container" id="app">
+
+  <!-- ===== Welcome Page ===== -->
+  <div class="card" id="page-welcome">
+    <div class="welcome-icon">🌿</div>
+    <h1 style="text-align:center">心理困局<br>自测诊断</h1>
+    <p class="welcome-subtitle" style="text-align:center">
+      你是否近期持续情绪低落、行动力缺失、<br>提不起劲做任何事？
+    </p>
+    <p style="text-align:center;color:var(--text-light)">
+      这可能不是单纯的"心情不好"，<br>而是陷入了某种特定的认知心理困局。
+    </p>
+
+    <ul class="feature-list">
+      <li><span class="feature-icon">📋</span><span>回答标准化选择题，像去医院做检查一样，逐步梳理你的状态</span></li>
+      <li><span class="feature-icon">🔍</span><span>系统自动匹配 7 种典型心理困局类型，帮你定位问题根源</span></li>
+      <li><span class="feature-icon">💊</span><span>像医生开药方一样，输出专属你的改善方案——可落地、可执行</span></li>
+    </ul>
+
+    <p style="text-align:center;font-weight:600;color:var(--text);margin-bottom:4px">选择检测模式</p>
+
+    <div class="version-cards">
+      <div class="version-card" id="vc-fast" onclick="selectVersion('fast')">
+        <div class="vc-icon">⚡</div>
+        <div class="vc-title">快速筛查</div>
+        <div class="vc-desc">9 道题 · 约 2 分钟</div>
+        <span class="vc-badge fast">推荐</span>
+      </div>
+      <div class="version-card" id="vc-full" onclick="selectVersion('full')">
+        <div class="vc-icon">🔬</div>
+        <div class="vc-title">标准检测</div>
+        <div class="vc-desc">18 道题 · 约 4 分钟</div>
+        <span class="vc-badge full">更精准</span>
+      </div>
+    </div>
+
+    <div class="start-btn-area">
+      <button class="btn btn-primary" id="btn-start" style="font-size:1.1rem;padding:16px 48px" disabled onclick="startTest()">
+        开始自测 →
+      </button>
+      <p class="text-muted" style="margin-top:12px" id="start-hint">👆 请先选择一种检测模式</p>
+    </div>
+
+    <div class="disclaimer">
+      ⚠️ 本测试为心理学知识科普工具，仅供参考和自我觉察，不能替代专业心理诊断或治疗。如果你的情绪困扰持续加重、已经严重影响日常生活，请及时寻求专业心理咨询师或精神科医生的帮助。
+    </div>
+  </div>
+
+  <!-- ===== Quiz Page ===== -->
+  <div class="card hidden" id="page-quiz">
+    <div id="quiz-version-tag"></div>
+    <div class="progress-wrap">
+      <div class="progress-info">
+        <span id="progress-label"></span>
+        <span id="progress-pct"></span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+    </div>
+    <h2 id="question-text" style="margin-bottom:4px"></h2>
+    <div class="options-list" id="options-container"></div>
+    <div class="nav-buttons">
+      <button class="btn btn-outline" id="btn-prev" onclick="prevQuestion()" disabled>← 上一题</button>
+      <button class="btn btn-primary" id="btn-next" onclick="nextQuestion()" disabled>下一题 →</button>
+    </div>
+  </div>
+
+  <!-- ===== Results Page ===== -->
+  <div class="card hidden" id="page-results">
+    <div id="results-content"></div>
+    <div style="text-align:center;margin-top:32px">
+      <button class="btn btn-warm" onclick="resetTest()" style="font-size:1rem">🔄 重新测试</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ===== BACKGROUND THEME SYSTEM =====
+const bgThemes = {
+  candy: { emojis: ['🍬','🍭','🍡','🍩','🧁','🍪','🍫','🍰'] },
+  heart: { emojis: ['💕','💖','💗','💝','❤️','🩷','💓','💞'] },
+  garden: { emojis: ['🌸','🌼','🌺','🌻','🌷','🍀','🌿','🪷','💐'] },
+  forest: { emojis: ['🐱','🐶','🐰','🐻','🐼','🦊','🐨','🐣','🐝','🦋'] },
+  starry: { emojis: ['⭐','🌟','✨','💫','🌙','☁️','🌠','🪐'] },
+};
+const themeKeys = Object.keys(bgThemes);
+
+function initBgTheme() {
+  let idx = parseInt(localStorage.getItem('psy_bg_theme_idx'));
+  if (isNaN(idx)) { idx = Math.floor(Math.random() * themeKeys.length); }
+  const nextIdx = (idx + 1) % themeKeys.length;
+  localStorage.setItem('psy_bg_theme_idx', nextIdx);
+  const theme = bgThemes[themeKeys[idx]];
+  const container = document.getElementById('bg-decorations');
+  const count = 18;
+  for (let i = 0; i < count; i++) {
+    const el = document.createElement('span');
+    el.className = 'bg-deco';
+    el.textContent = theme.emojis[Math.floor(Math.random() * theme.emojis.length)];
+    el.style.left = (Math.random() * 92) + '%';
+    el.style.top = (Math.random() * 94) + '%';
+    el.style.fontSize = (1 + Math.random() * 2.2) + 'rem';
+    el.style.animationDelay = (Math.random() * 10) + 's';
+    el.style.animationDuration = (8 + Math.random() * 10) + 's';
+    container.appendChild(el);
+  }
+}
+initBgTheme();
+
+// ===== DATA: Full 18 Questions =====
+const fullQuestions = [
+  { text: "面对一项重要任务时，你的第一反应通常是？",
+    options: [
+      { label: "立刻开始，但做着做着总觉得不够好，反复修改", pattern: "完美主义内耗" },
+      { label: "觉得压力好大，先刷手机或做点别的事缓一缓", pattern: "拖延型认知陷阱" },
+      { label: "脑子里开始播放「万一搞砸了怎么办」的各种画面", pattern: "灾难化思维" },
+      { label: "觉得自己能力不够，别人都行就自己不行", pattern: "习得性无助" } ] },
+  { text: "犯了一个小错误之后，你的典型反应是？",
+    options: [
+      { label: "「反正已经错了」，干脆破罐子破摔，放弃这件事", pattern: "破窗效应" },
+      { label: "在心里把自己骂了一百遍，久久不能释怀", pattern: "完美主义内耗" },
+      { label: "立刻开始联想这个小错会不会引发一连串灾难", pattern: "灾难化思维" },
+      { label: "赶紧补救，同时忍不住担心别人会怎么看自己", pattern: "讨好型思维" } ] },
+  { text: "朋友请你帮忙，但你正在忙自己的事，你会？",
+    options: [
+      { label: "硬着头皮答应，然后自己熬夜赶工、累到不行", pattern: "讨好型思维" },
+      { label: "嘴上答应，但其实一直拖着，最后敷衍了事", pattern: "拖延型认知陷阱" },
+      { label: "纠结好几天才拒绝，期间反复想对方会不会生气", pattern: "过度焦虑思维" },
+      { label: "觉得不帮这个忙人家就不喜欢自己了", pattern: "讨好型思维" } ] },
+  { text: "当你的计划突然被打乱时，你通常？",
+    options: [
+      { label: "既然节奏已经乱了，干脆什么都不想做了", pattern: "破窗效应" },
+      { label: "非常烦躁，必须立刻重新制定一个完美的新计划", pattern: "完美主义内耗" },
+      { label: "开始焦虑，总觉得这个变动会带来严重后果", pattern: "过度焦虑思维" },
+      { label: "觉得反正自己做什么都做不好，乱就乱吧", pattern: "习得性无助" } ] },
+  { text: "夜深人静躺在床上，你的大脑通常在？",
+    options: [
+      { label: "像放电影一样回放今天犯的每一个小错误", pattern: "完美主义内耗" },
+      { label: "不由自主地担心明天可能发生的各种糟心事", pattern: "过度焦虑思维" },
+      { label: "不受控制地想象各种可怕的「万一」场景", pattern: "灾难化思维" },
+      { label: "回想今天有谁可能对自己不满、哪句话说错了", pattern: "讨好型思维" } ] },
+  { text: "看到别人在某方面明显比你优秀时？",
+    options: [
+      { label: "觉得自己一无是处，怎么努力都没用", pattern: "习得性无助" },
+      { label: "立刻给自己列一堆提升计划（但大部分不会真的去做）", pattern: "拖延型认知陷阱" },
+      { label: "焦虑自己落后了，必须立刻拼命赶上", pattern: "过度焦虑思维" },
+      { label: "觉得对方肯定看不起自己，不敢和对方交流", pattern: "讨好型思维" } ] },
+  { text: "一项工作做到 80% 的时候，你通常会？",
+    options: [
+      { label: "觉得还不够好，想要推倒重来", pattern: "完美主义内耗" },
+      { label: "太累了先放一放，结果一放就是好几天", pattern: "拖延型认知陷阱" },
+      { label: "反正快做完了，剩下 20% 随便收个尾吧", pattern: "破窗效应" },
+      { label: "越到最后越害怕出问题，反复检查停不下来", pattern: "灾难化思维" } ] },
+  { text: "面对一个全新的挑战时？",
+    options: [
+      { label: "还没开始就先预设自己会失败", pattern: "习得性无助" },
+      { label: "花大量时间准备，但总觉得准备得还不够充分", pattern: "完美主义内耗" },
+      { label: "忍不住把可能发生的坏结果全部在脑子里过一遍", pattern: "灾难化思维" },
+      { label: "先拖着不去想，等到火烧眉毛了再说", pattern: "拖延型认知陷阱" } ] },
+  { text: "跟别人发生了一点小摩擦后？",
+    options: [
+      { label: "翻来覆去地想自己是不是哪句话说错了", pattern: "讨好型思维" },
+      { label: "担心跟对方的关系会就此破裂", pattern: "灾难化思维" },
+      { label: "焦虑到心跳加速、坐立不安，影响正常工作", pattern: "过度焦虑思维" },
+      { label: "觉得肯定是自己的问题，自己就是不会跟人相处", pattern: "习得性无助" } ] },
+  { text: "看着待办清单上有一堆事的时候？",
+    options: [
+      { label: "感到巨大压迫感但无法开始，用刷手机来逃避", pattern: "拖延型认知陷阱" },
+      { label: "觉得肯定做不完，不如索性不做了", pattern: "习得性无助" },
+      { label: "还没开始做就焦虑到心跳加速、坐立不安", pattern: "过度焦虑思维" },
+      { label: "花大量时间整理完美的 to-do list，但执行力跟不上", pattern: "完美主义内耗" } ] },
+  { text: "房间或办公桌逐渐变乱的时候？",
+    options: [
+      { label: "反正已经这么乱了，破罐子破摔，继续堆", pattern: "破窗效应" },
+      { label: "想收拾但觉得工程量太大，一直拖着不动手", pattern: "拖延型认知陷阱" },
+      { label: "看到乱就心慌，必须立刻收拾到一尘不染的状态", pattern: "过度焦虑思维" },
+      { label: "觉得收拾了也没用，过两天又会乱", pattern: "习得性无助" } ] },
+  { text: "有人真诚地夸奖你时，你的内心真实反应是？",
+    options: [
+      { label: "觉得对方只是客气，自己其实没那么好", pattern: "习得性无助" },
+      { label: "第一反应是「但我在那个地方做得还不够好」", pattern: "完美主义内耗" },
+      { label: "立刻开始担心：那下次达不到这个期望怎么办", pattern: "过度焦虑思维" },
+      { label: "觉得自己必须加倍努力，才配得上这句夸奖", pattern: "讨好型思维" } ] },
+  { text: "做决定的时候，你通常？",
+    options: [
+      { label: "每个选项反复权衡，迟迟下不了决心", pattern: "过度焦虑思维" },
+      { label: "选了之后做一半又觉得不够好，推倒重来", pattern: "完美主义内耗" },
+      { label: "觉得不管选哪个最后都会后悔，干脆随便", pattern: "习得性无助" },
+      { label: "优先想别人会怎么选，而不是自己真正想要什么", pattern: "讨好型思维" } ] },
+  { text: "当感觉一整天什么都没做成时？",
+    options: [
+      { label: "心想「反正今天已经废了，明天再说吧」", pattern: "破窗效应" },
+      { label: "陷入深深自责，但也不采取任何补救行动", pattern: "拖延型认知陷阱" },
+      { label: "开始焦虑明天任务会更重，压力翻倍", pattern: "过度焦虑思维" },
+      { label: "觉得自己就是这样没用的人，改变不了的", pattern: "习得性无助" } ] },
+  { text: "在团队协作中，你通常的状态是？",
+    options: [
+      { label: "默默承担了最多的工作，因为不好意思拒绝别人", pattern: "讨好型思维" },
+      { label: "时刻担心自己负责的部分会拖团队后腿", pattern: "过度焦虑思维" },
+      { label: "觉得别人都比自己厉害，尽量不出头不发声", pattern: "习得性无助" },
+      { label: "过度准备自己负责的部分，总觉得还有改进空间", pattern: "完美主义内耗" } ] },
+  { text: "遭遇一次挫折之后，你倾向于？",
+    options: [
+      { label: "觉得「我果然就是不行」，彻底放弃", pattern: "习得性无助" },
+      { label: "不受控制地联想这件事可能带来的所有坏影响", pattern: "灾难化思维" },
+      { label: "觉得只要自己当初做得更完美就不会失败", pattern: "完美主义内耗" },
+      { label: "逃避面对，用打游戏、追剧等转移注意力", pattern: "拖延型认知陷阱" } ] },
+  { text: "当你下定决心想要做出改变时？",
+    options: [
+      { label: "想了很久但一直在等一个「完美的时机」才开始", pattern: "拖延型认知陷阱" },
+      { label: "定了一个极高的目标，做不到就觉得自己全盘失败", pattern: "完美主义内耗" },
+      { label: "刚尝试了一下遇到困难，就觉得改变不了的", pattern: "习得性无助" },
+      { label: "首先担心：我变了之后别人会怎么看我？", pattern: "讨好型思维" } ] },
+  { text: "想到未来的时候，你内心更多感受到的是？",
+    options: [
+      { label: "隐隐的担忧和不安，总觉得会有什么不好的事发生", pattern: "过度焦虑思维" },
+      { label: "一种宿命感——感觉一切都在往最坏的方向走", pattern: "灾难化思维" },
+      { label: "麻木——反正努力也没用，随它去吧", pattern: "习得性无助" },
+      { label: "必须现在就把一切规划到完美，否则未来会失控", pattern: "完美主义内耗" } ] }
+];
+
+// Short version: 9 carefully picked questions covering all 7 patterns
+const shortIndices = [0, 1, 3, 4, 5, 7, 9, 13, 17];
+const shortQuestions = shortIndices.map(i => fullQuestions[i]);
+
+// ===== DATA: Diagnostic Reports =====
+const diagnoses = {
+  "破窗效应": {
+    name: "破窗效应", emoji: "🪟",
+    summary: "你容易因为一个小小的裂缝，放任整面墙倒塌。",
+    manifestations: [
+      "犯了一个小错之后，会产生「反正已经这样了」的心态，干脆放弃努力",
+      "混乱一旦开始，就容易越滚越大，从一张乱书桌到一个乱房间再到整个生活失控",
+      "对自己有「全或无」的判断倾向：要么完美，要么彻底不干"
+    ],
+    causes: [
+      "核心成因是「自我监控失灵」——当内心出现了第一个裂纹（计划被打乱、犯了一个小错），你会不自觉地降低对自我的要求标准",
+      "久而久之形成一个恶性循环：小失败 → 自我放弃 → 更大的混乱 → 更深的无力感"
+    ],
+    impacts: [
+      "长期来看会让你形成「反正我做不好」的自我认知定势",
+      "微小的问题不断累积，最终演变成实质性的生活失控",
+      "最深的伤害是让你失去「从小处修复自己」的能力"
+    ],
+    actions: [
+      { title: "「只修一扇窗」法则", desc: "当你发现某件事出了小问题（比如房间乱了、任务拖延了一天），不要去想「全部做完」，只告诉自己：今天就修这一扇窗。收拾一个角落、完成一个最小任务单元。用一次小修复打破「全盘放弃」的惯性。" },
+      { title: "建立「破损警报」机制", desc: "在你的手机上设一个标签或备忘录，每当内心闪出「反正已经这样了」的念头时，立刻标记为「⚠️ 破窗警报」。识别这个念头本身就是修复的开始——看见它，就不容易被它带着走。" },
+      { title: "用「已修复」替代「已破坏」", desc: "改变你对状态的描述语言。不要说「今天已经废了」，改说「今天有一段时间效率不高，但我修好了接下来的一小时」。语言会塑造你的自我认知。" },
+      { title: "设置物理「止损线」", desc: "在容易失控的领域设定一个硬止损规则。比如：再忙也不允许连续三天不整理书桌、再累也不允许连续两晚不洗漱。用小规则守住你的「底线秩序」。" }
+    ]
+  },
+  "完美主义内耗": {
+    name: "完美主义内耗", emoji: "🎯",
+    summary: "你对自己有很高的要求，但这份高标准正在透支你的心理能量。",
+    manifestations: [
+      "做事之前花大量时间准备，总觉得「准备得还不够」",
+      "对成果永远不满意，一个方案改十几版还是觉得不行",
+      "经常因为达不到自己内心的标准而迟迟不敢开始或交付",
+      "被夸奖时第一反应是「但我在那个地方做得还不够好」"
+    ],
+    causes: [
+      "完美主义的本质不是追求卓越，而是「恐惧不够好」——你害怕被评判、害怕失败，于是把标准不断拉高，高到让自己寸步难行",
+      "这往往源于成长过程中形成了「只有做到完美才值得被爱/认可」的深层信念"
+    ],
+    impacts: [
+      "持续的心理能量消耗——你花大量时间在做与改之间反复，而不是在完成",
+      "容易形成「拖延-自责-更拖延」的恶性循环",
+      "长期高压力状态容易引发焦虑和倦怠"
+    ],
+    actions: [
+      { title: "践行「够好就行」原则", desc: "给自己设定一个明确的「交付线」：这件事，做到 70 分就可以交出去了。不管做什么，先交付一个版本，然后再迭代。完成比完美重要，这句话需要你反复对自己说。" },
+      { title: "区分「高标准」和「不可能标准」", desc: "拿出一张纸，把你对自己某方面的标准写下来，然后问自己：这个标准是「很高」还是「根本不可能」？如果是后者——比如「永远不犯任何错误」——就把它划掉，改成切实可行的版本。" },
+      { title: "练习「故意不完美」", desc: "每周故意做一件不完美的小事：发一条有错别字的朋友圈不撤回、出门不化妆、交一份 80 分的方案。你会惊讶地发现——天没有塌，别人甚至根本没注意到。" },
+      { title: "把「自我批评」换成「自我教练」", desc: "当你在心里骂自己「怎么连这个都做不好」的时候，暂停一下，想象你是一位温和的教练，你会对运动员说什么？把那些话对自己说一遍。用指导代替指责。" }
+    ]
+  },
+  "拖延型认知陷阱": {
+    name: "拖延型认知陷阱", emoji: "⏳",
+    summary: "你不是懒——你被困在「想做但做不到」的认知夹缝中。",
+    manifestations: [
+      "面对任务时第一反应不是做，而是「先做点别的缓解一下焦虑」",
+      "经常在截止日期前最后一刻才拼命赶工",
+      "对自己说「明天一定开始」，但这个「明天」一直在推迟",
+      "内心并非不想做，而是有一种看不见的阻力让你无法启动"
+    ],
+    causes: [
+      "拖延的核心往往不是时间管理问题，而是情绪调节问题——你是在用「逃避任务」来逃避「任务带来的焦虑、压力、对失败的恐惧」",
+      "拖延给你带来了短期的情绪缓解（刷手机确实让你暂时不焦虑了），但代价是长期的更大压力和自我谴责"
+    ],
+    impacts: [
+      "形成「焦虑→逃避→更焦虑→更逃避」的情绪循环",
+      "长期拖延会导致自我效能感持续下降——你开始不相信自己能按时完成任何事",
+      "重要的事不断被挤压，最终可能错失关键机会"
+    ],
+    actions: [
+      { title: "「5 分钟法则」破冰", desc: "不管任务多大，告诉自己：我只做 5 分钟。5 分钟后可以停下来，想干嘛干嘛。你会发现 5 分钟之后你大概率会继续做下去——最难的不是做，是「开始做」。" },
+      { title: "拆分到荒谬地小", desc: "不要写「写报告」，写「打开 Word」。不要写「健身」，写「穿上运动鞋」。把任务拆到不能再拆的程度，每一个步骤小到你完全找不到拖延的借口。" },
+      { title: "直面拖延背后的情绪", desc: "当你又想拖延时，停下来问自己：「我现在在逃避什么感觉？」——是害怕做得不够好？是觉得太难？还是纯粹不想动？命名那个情绪，你会发现它没有那么可怕。" },
+      { title: "建立「启动仪式」", desc: "给自己设计一个固定的「开始工作」信号：冲一杯茶、戴上降噪耳机、把手机放到另一个房间。这个仪式会在你的大脑中建立「条件反射」——信号一出现，工作模式自动激活。" }
+    ]
+  },
+  "灾难化思维": {
+    name: "灾难化思维", emoji: "🌪️",
+    summary: "你的大脑像一个自动放大器，把每个小麻烦都放大成最坏的可能。",
+    manifestations: [
+      "遇到一点小事，脑子里会自动播放「最坏结局」的连续剧",
+      "别人随口说的一句话，你能解读出一百种糟糕的含义",
+      "身体出现一点小不适，就开始怀疑是不是得了重病",
+      "无法停止「万一……怎么办」的思维循环"
+    ],
+    causes: [
+      "灾难化思维的根源是「不确定性耐受度低」——你的大脑无法忍受「不确定」，于是用最坏的可能性来填补信息空白，仿佛提前想到最坏情况就能控制它",
+      "这在进化上是一种自我保护机制（警惕危险），但在现代社会变成了过度消耗"
+    ],
+    impacts: [
+      "持续处于低水平应激状态，消耗大量心理和生理能量",
+      "对于不确定性事件的耐受度越来越低，生活范围不断收窄",
+      "会因为「预支的恐惧」而错失很多本可尝试的机会"
+    ],
+    actions: [
+      { title: "「最坏/最好/最可能」三栏法", desc: "每次灾难化思维发作时，拿出一张纸分三栏：最坏的可能是什么？最好的可能是什么？最可能发生的又是什么？写下来之后你会发现，你大脑里只放了第一栏——后两栏根本没有任何证据支持它不会发生。" },
+      { title: "给自己设「担忧时间」", desc: "每天固定 15 分钟作为「合法担忧时间」（比如下午 4:00-4:15）。在这个时间之外，一旦开始灾难化联想，就告诉自己：「还没到担忧时间，到时候再想。」到了担忧时间，你会发现大部分刚才觉得天大的事已经不觉得严重了。" },
+      { title: "追问到底法", desc: "问自己：「这个可怕的结果真的发生了又会怎样？」然后继续追问：「那又怎样？」连问三到五次，你会发现你想象中的灾难链条其实非常脆弱，每一步都有大量可以干预和改变的空间。" },
+      { title: "收集「虚惊一场」清单", desc: "在手机备忘录里专门建一个清单，记录你曾经担心过的那些「灾难」——哪些真的发生了？哪些只是虚惊一场？当你的清单上「虚惊一场」占了 90% 以上，下次灾难化思维发作时，把它翻出来看看。" }
+    ]
+  },
+  "习得性无助": {
+    name: "习得性无助", emoji: "🪨",
+    summary: "你不是真的不行——你只是被过去的失败教会了「放弃」。",
+    manifestations: [
+      "面对新挑战时，还未尝试就预设自己会失败",
+      "经常说/想「我就这样了」「改变不了的」「努力也没用」",
+      "即使客观上能力足够，内心也深信自己做不到",
+      "习惯于被动接受而非主动改变，因为「争了也没用」"
+    ],
+    causes: [
+      "习得性无助是「学来的」——当你反复经历「无论怎么努力结果都一样（都是失败）」的体验后，你的大脑自动得出了「努力无用」的结论，并把这个结论推广到了所有情境",
+      "这就像一只被电击过的狗即使笼门打开也不再逃跑——不是逃不掉，是「学会」了不逃"
+    ],
+    impacts: [
+      "这是所有心理困局中最需要警惕的一种——它会让你在明明有能力的时候主动放弃",
+      "长期习得性无助与抑郁高度关联",
+      "它让一个人的世界越缩越小，不断丧失尝试的勇气和机会"
+    ],
+    actions: [
+      { title: "「微小胜利」重建法", desc: "每天给自己设定一个「一定可以完成」的微小目标：做 5 个俯卧撑、整理一个抽屉、给一盆花浇水。完成之后在日历上打一个勾。不需要多大的成就，只需要让你的大脑重新记住——「我做了，结果变了」。" },
+      { title: "拆解「失败」的归因", desc: "每次觉得自己「又失败了」的时候，拿出一张纸，写下三个问题：①这次的结果有多少是我的原因？②有多少是外部环境的原因？③如果是我的朋友遇到了同样的事，我会怎么安慰他？你会发现你的自责通常过度了。" },
+      { title: "找回「可控感」清单", desc: "在你的生活中找到那些你 100% 可以控制的事：几点睡觉、今天喝几杯水、跟谁聊天。每天刻意做一件你完全可控的事，不断积累「我能影响我的生活」的证据。" },
+      { title: "用行为激活打破「躺平」", desc: "不要等「有动力了再做」，先做再等动力来。选一件你曾经喜欢但很久没做的事（哪怕只是出去晒 10 分钟太阳），在没有动力的情况下先去做了。行为本身会带来情绪的变化，而不是反过来。" }
+    ]
+  },
+  "讨好型思维": {
+    name: "讨好型思维", emoji: "🎭",
+    summary: "你总是在照顾所有人的感受，却忘了自己也需要被照顾。",
+    manifestations: [
+      "很难对别人说「不」，即使自己已经很累了",
+      "做决定时第一个想的是「别人会怎么看」，而不是「我想要什么」",
+      "常在对话后反复回想「我是不是说错了什么」",
+      "即使明明是对方的问题，也会先找自己的错"
+    ],
+    causes: [
+      "讨好型思维的核心是把「自我价值」绑定在「他人认可」上——你需要通过不断满足别人来确认自己是「好的」「值得被喜欢的」",
+      "这种模式往往很早就形成了：小时候可能只有在「乖」「懂事」「不让大人操心」的时候才得到关注和认可"
+    ],
+    impacts: [
+      "长期压抑自己的真实需求，会导致内心积累大量不被表达的委屈和愤怒",
+      "你帮了所有人，却没人知道你也需要帮助——因为你从不展示那一面",
+      "最终要么内耗殆尽，要么在某一天突然爆发，伤人伤己"
+    ],
+    actions: [
+      { title: "练习「延迟答应」", desc: "当别人对你提出请求时，不要立刻说「好」。强制自己说：「我看看我的安排，晚点回复你。」这半小时的缓冲让你从「条件反射式讨好」中抽身，有机会冷静地问自己：我真的想做这件事吗？" },
+      { title: "写「讨好日志」", desc: "记录一周内你每一次因为「不好意思拒绝」而做的事，在旁边标注：①这件事花了我多少时间/精力？②如果我不做，最坏的结果是什么？写一周之后你会看到，那些你以为「不答应天会塌」的事，其实根本没人会介意。" },
+      { title: "从小事开始说「不」", desc: "从低风险情境开始练习拒绝：拒绝推销员的推荐、拒绝不喜欢的餐厅、拒绝一个可有可无的聚会邀请。每次成功说「不」之后，观察：对方真的因此不爱你了吗？大概率不会。" },
+      { title: "重新定义「好」", desc: "在纸上写一句新的自我定义：「我是一个好的人，不因为我满足了谁，而因为我尊重了自己的边界。」贴在你每天能看到的地方。被喜欢是一种礼物，但不需要你用自己来交换。" }
+    ]
+  },
+  "过度焦虑思维": {
+    name: "过度焦虑思维", emoji: "⚡",
+    summary: "你的大脑像一个不停转的马达，即使在不需要紧张的时候也无法停下来。",
+    manifestations: [
+      "日常中大部分时间处于莫名的不安和紧张中",
+      "即使没有明确威胁，身体也会有焦虑反应（心悸、出汗、胃不适）",
+      "面对选择时反复权衡，担心每一个选项的后果",
+      "即使事情进展顺利，也会担心「是不是哪里有问题我没发现」"
+    ],
+    causes: [
+      "过度焦虑思维的本质是「大脑的警戒系统过于灵敏」——它把很多无害的信号都当成了威胁，长时间处于战备状态",
+      "这可能与先天神经敏感特质有关，也可能被长期高压环境不断强化",
+      "在信息过载的时代，持续的多巴胺刺激也会让大脑难以回到基线平静状态"
+    ],
+    impacts: [
+      "长期焦虑会消耗大量生理资源，影响睡眠、消化和免疫功能",
+      "决策速度变慢，容易错过时机",
+      "无法真正享受当下，因为注意力总被拉到「可能会出问题的地方」"
+    ],
+    actions: [
+      { title: "「5-4-3-2-1」感官锚定法", desc: "当焦虑来袭时，立刻做这个练习：说出你看到的 5 样东西→你摸到的 4 样东西→你听到的 3 个声音→你闻到的 2 种气味→你尝到的 1 种味道。这个练习会强制把你从「脑子里」拉回「身体上」，打断焦虑的思维循环。" },
+      { title: "区分「事实」和「想象」", desc: "焦虑发作时，拿出一张纸，左边写「事实」（我目前所知的确切信息），右边写「想象」（我大脑额外编造的故事）。你会发现右边那栏往往比左边长三倍——而右边的都不是真的。" },
+      { title: "给焦虑「定时定量」", desc: "不要试图消除焦虑（越抵抗越强烈），而是给它一个专属空间。每天固定时段（比如晚上 8 点），拿出 15 分钟，专注地写下所有让你焦虑的事。时间一到就合上本子——焦虑已经得到了它的「表达时间」，现在你可以做其他事了。" },
+      { title: "降低生理基线", desc: "过度焦虑不只是一个心理问题，它也有生理基础。坚持每天做 5-10 分钟的腹式深呼吸（吸气 4 秒→屏息 4 秒→呼气 6 秒），持续两周。降低交感神经的兴奋基线，你的大脑就不会那么容易拉响警报。" }
+    ]
+  }
+};
+
+// ===== STATE =====
+let mode = null; // 'fast' | 'full'
+let questions = [];
+let currentQuestion = 0;
+let answers = [];
+let selectedAnswer = null;
+
+// ===== VERSION SELECT =====
+function selectVersion(version) {
+  mode = version;
+  document.getElementById('vc-fast').classList.toggle('selected', version === 'fast');
+  document.getElementById('vc-full').classList.toggle('selected', version === 'full');
+  const btn = document.getElementById('btn-start');
+  btn.disabled = false;
+  btn.textContent = version === 'fast' ? '快速筛查 →' : '标准检测 →';
+  document.getElementById('start-hint').classList.add('hidden');
+}
+
+// ===== PAGE SWITCHING =====
+function showPage(pageId) {
+  document.querySelectorAll('.card').forEach(c => c.classList.add('hidden'));
+  document.getElementById(pageId).classList.remove('hidden');
+}
+
+// ===== START TEST =====
+function startTest() {
+  if (!mode) return;
+  questions = (mode === 'fast') ? shortQuestions : fullQuestions;
+  currentQuestion = 0;
+  answers = new Array(questions.length).fill(null);
+  selectedAnswer = null;
+  showPage('page-quiz');
+
+  // Version tag
+  const tag = document.getElementById('quiz-version-tag');
+  if (mode === 'fast') {
+    tag.innerHTML = '<span class="version-tag fast">⚡ 快速筛查 · 9题</span>';
+  } else {
+    tag.innerHTML = '<span class="version-tag full">🔬 标准检测 · 18题</span>';
+  }
+
+  renderQuestion();
+  document.getElementById('page-quiz').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// ===== RENDER QUESTION =====
+function renderQuestion() {
+  const q = questions[currentQuestion];
+  selectedAnswer = answers[currentQuestion];
+
+  document.getElementById('question-text').textContent = q.text;
+  document.getElementById('progress-label').textContent = `第 ${currentQuestion + 1} / ${questions.length} 题`;
+  document.getElementById('progress-pct').textContent = `${Math.round((currentQuestion + 1) / questions.length * 100)}%`;
+  document.getElementById('progress-fill').style.width = `${((currentQuestion + 1) / questions.length * 100)}%`;
+
+  const container = document.getElementById('options-container');
+  container.innerHTML = '';
+  const labels = ['A', 'B', 'C', 'D'];
+  q.options.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn' + (selectedAnswer === i ? ' selected' : '');
+    btn.innerHTML = `<span class="option-label">${labels[i]}</span><span>${opt.label}</span>`;
+    btn.addEventListener('click', () => selectOption(i));
+    container.appendChild(btn);
+  });
+
+  document.getElementById('btn-prev').disabled = (currentQuestion === 0);
+  updateNextButton();
+}
+
+function selectOption(index) {
+  selectedAnswer = index;
+  answers[currentQuestion] = index;
+  const btns = document.getElementById('options-container').querySelectorAll('.option-btn');
+  btns.forEach((b, i) => { b.classList.toggle('selected', i === index); });
+  updateNextButton();
+}
+
+function updateNextButton() {
+  const btn = document.getElementById('btn-next');
+  btn.disabled = (selectedAnswer === null);
+  const isLast = currentQuestion === questions.length - 1;
+  btn.textContent = isLast ? '查看结果 →' : '下一题 →';
+}
+
+// ===== NAVIGATION =====
+function nextQuestion() {
+  if (selectedAnswer === null) return;
+  if (currentQuestion < questions.length - 1) {
+    currentQuestion++;
+    renderQuestion();
+    document.getElementById('page-quiz').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  } else {
+    // All done → celebration!
+    launchFireworks();
+  }
+}
+
+function prevQuestion() {
+  if (currentQuestion > 0) { currentQuestion--; renderQuestion(); }
+}
+
+// ===== CELEBRATION (礼花) =====
+function launchFireworks() {
+  const layer = document.getElementById('fireworks-layer');
+  layer.classList.remove('hidden');
+  layer.innerHTML = '';
+
+  const colors = ['#E8B4A0','#8BAF9A','#F5C6B3','#D4E8DC','#FFD4C4','#A8C9B5','#FDE0D4','#B8D8C4','#FFB8A0','#7BAF9A'];
+  const count = 80;
+
+  for (let i = 0; i < count; i++) {
+    const p = document.createElement('div');
+    p.className = 'firework-particle';
+    p.style.background = colors[Math.floor(Math.random() * colors.length)];
+    p.style.left = '50%';
+    p.style.top = '45%';
+    p.style.width = (4 + Math.random() * 12) + 'px';
+    p.style.height = (4 + Math.random() * 12) + 'px';
+    p.style.borderRadius = Math.random() > 0.5 ? '50%' : '3px';
+    p.style.setProperty('--fx', ((Math.random() - 0.5) * 800) + 'px');
+    p.style.setProperty('--fy', ((Math.random() - 0.5) * 600) + 'px');
+    p.style.setProperty('--fr', (Math.random() * 720 - 360) + 'deg');
+    p.style.animationDelay = (Math.random() * 0.6) + 's';
+    p.style.animationDuration = (2 + Math.random() * 1.5) + 's';
+    layer.appendChild(p);
+  }
+
+  // Celebration text
+  const text = document.createElement('div');
+  text.className = 'firework-text';
+  text.textContent = '🎉 太棒了！';
+  layer.appendChild(text);
+
+  // After fireworks, show relax modal
+  setTimeout(() => {
+    layer.classList.add('hidden');
+    layer.innerHTML = '';
+    startRelaxation();
+  }, 2800);
+}
+
+// ===== RELAXATION =====
+let relaxTimer = null;
+
+function startRelaxation() {
+  const modal = document.getElementById('relax-modal');
+  modal.classList.remove('hidden');
+  let seconds = 10;
+  document.getElementById('relax-seconds').textContent = seconds;
+  document.getElementById('relax-guide').textContent = '吸气…';
+
+  const guides = ['吸气…', '屏住…', '呼气…', '吸气…', '屏住…', '呼气…', '吸气…', '屏住…', '呼气…', '完成！'];
+  let guideIdx = 0;
+
+  relaxTimer = setInterval(() => {
+    seconds--;
+    document.getElementById('relax-seconds').textContent = seconds;
+    guideIdx++;
+    if (guideIdx < guides.length) {
+      document.getElementById('relax-guide').textContent = guides[guideIdx];
+    }
+    if (seconds <= 0) {
+      clearInterval(relaxTimer);
+      finishRelax();
+    }
+  }, 1000);
+}
+
+function skipRelax() {
+  if (relaxTimer) clearInterval(relaxTimer);
+  finishRelax();
+}
+
+function finishRelax() {
+  document.getElementById('relax-modal').classList.add('hidden');
+  showResults();
+}
+
+// ===== SCORING =====
+function calculateScores() {
+  const patterns = ["破窗效应","完美主义内耗","拖延型认知陷阱","灾难化思维","习得性无助","讨好型思维","过度焦虑思维"];
+  const scores = {};
+  patterns.forEach(p => scores[p] = 0);
+  answers.forEach((ansIdx, qIdx) => {
+    if (ansIdx !== null) {
+      scores[questions[qIdx].options[ansIdx].pattern]++;
+    }
+  });
+  return scores;
+}
+
+function getTopDiagnosis(scores) {
+  const patterns = ["破窗效应","完美主义内耗","拖延型认知陷阱","灾难化思维","习得性无助","讨好型思维","过度焦虑思维"];
+  let top = patterns[0], topScore = scores[top];
+  patterns.forEach(p => { if (scores[p] > topScore) { top = p; topScore = scores[p]; } });
+  return { pattern: top, score: topScore };
+}
+
+// ===== SHOW RESULTS =====
+function showResults() {
+  const scores = calculateScores();
+  const { pattern } = getTopDiagnosis(scores);
+  const diag = diagnoses[pattern];
+  const maxScore = questions.length;
+
+  const sortedPatterns = Object.entries(scores).sort((a, b) => b[1] - a[1]);
+  let scoreBarsHTML = sortedPatterns.map(([p, s]) => {
+    const pct = Math.round(s / maxScore * 100);
+    const isTop = (p === pattern);
+    return `<div class="score-row"><span class="score-label">${p}</span><div class="score-track"><div class="score-fill${isTop ? ' primary' : ''}" style="width:${pct}%"></div></div><span class="score-val">${s}</span></div>`;
+  }).join('');
+
+  const html = `
+    <div class="result-header fade-in">
+      <div class="result-badge">诊断结果</div>
+      <div class="result-name">${diag.emoji} ${diag.name}</div>
+      <p class="result-summary">${diag.summary}</p>
+    </div>
+    <div class="section fade-in delay-1">
+      <div class="section-title">📋 典型表现</div>
+      <ul class="bullet-list">${diag.manifestations.map(m => `<li><span class="bullet-dot"></span>${m}</li>`).join('')}</ul>
+    </div>
+    <div class="section fade-in delay-2">
+      <div class="section-title">🔬 成因分析</div>
+      <ul class="bullet-list">${diag.causes.map(c => `<li><span class="bullet-dot"></span>${c}</li>`).join('')}</ul>
+    </div>
+    <div class="section fade-in delay-2">
+      <div class="section-title">⚠️ 潜在影响</div>
+      <ul class="bullet-list">${diag.impacts.map(i => `<li><span class="bullet-dot"></span>${i}</li>`).join('')}</ul>
+    </div>
+    <div class="section fade-in delay-3">
+      <div class="section-title">💊 对症疏导方案</div>
+      ${diag.actions.map((a, i) => `<div class="action-card"><div class="action-num">方案 ${i + 1}：${a.title}</div><p>${a.desc}</p></div>`).join('')}
+    </div>
+    <details class="section fade-in delay-3" style="margin-top:20px">
+      <summary style="cursor:pointer;font-weight:600;color:var(--text-light);font-size:0.95rem">📊 查看各项得分详情</summary>
+      <div class="score-bar-group" style="margin-top:14px">${scoreBarsHTML}</div>
+      <p class="text-muted" style="margin-top:12px;text-align:center">满分 ${maxScore} 分，分数越高说明该困局的倾向性越明显</p>
+    </details>
+  `;
+
+  document.getElementById('results-content').innerHTML = html;
+  showPage('page-results');
+  document.getElementById('page-results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// ===== RESET =====
+function resetTest() {
+  currentQuestion = 0;
+  answers = [];
+  selectedAnswer = null;
+  document.getElementById('vc-fast').classList.remove('selected');
+  document.getElementById('vc-full').classList.remove('selected');
+  document.getElementById('btn-start').disabled = true;
+  document.getElementById('btn-start').textContent = '开始自测 →';
+  document.getElementById('start-hint').classList.remove('hidden');
+  mode = null;
+  showPage('page-welcome');
+  document.getElementById('page-welcome').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// ===== Keyboard =====
+document.addEventListener('keydown', (e) => {
+  const quizVisible = !document.getElementById('page-quiz').classList.contains('hidden');
+  const relaxVisible = !document.getElementById('relax-modal').classList.contains('hidden');
+  if (!quizVisible || relaxVisible) return;
+  if (e.key === 'ArrowLeft' && currentQuestion > 0) prevQuestion();
+  else if (e.key === 'ArrowRight' && selectedAnswer !== null) nextQuestion();
+  else if (['1','2','3','4'].includes(e.key)) selectOption(parseInt(e.key) - 1);
+});
+</script>
+</body>
+</html>
